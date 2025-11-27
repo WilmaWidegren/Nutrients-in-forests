@@ -24,3 +24,9 @@ If tree_i.size > tree_j.size:
     tree_i.carbon -= transfer_amount
     tree_j.carbon += transfer_amount
 '''
+
+'''
+Matrix with features for nodes and edges.
+3D feature matrix for nodes: 
+2D feature matrix for edges: carbon_transfer_cost?
+'''
