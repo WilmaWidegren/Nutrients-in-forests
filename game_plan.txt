@@ -5,3 +5,5 @@ När ska vi vara klara (delmål):
 
 
 Vilka funktioner behövs?:
+Träd växa funktion.
+Träd dela näring funktion.
