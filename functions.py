@@ -1,10 +1,5 @@
 import numpy as np
 
-
-
-def grow_forest():
-    pass
-
 # This function taker number ocf trees (int), size of forest (int), the size will be that squared in the first cuadrant
 def get_tree_positions(Number_of_trees, size_of_forest):
     x_positions, y_positions = [], []
@@ -15,6 +10,14 @@ def get_tree_positions(Number_of_trees, size_of_forest):
 
     return x_positions, y_positions
 
+
+def grow_initial_forest(Number_of_trees , max_size):
+    tree_sizes = []
+    for i in range(Number_of_trees):
+        tree_sizes.append(np.random.uniform(0,max_size))
+    return tree_sizes
+
+    
 
 def tree_growth_formula():
     pass

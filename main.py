@@ -1,4 +1,4 @@
 import functions as f
 
-print(f.get_tree_positions(10, 10))
+x, y = f.get_tree_positions(100, 10)
 
