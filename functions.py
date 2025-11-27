@@ -19,8 +19,45 @@ def grow_initial_forest(Number_of_trees , max_size):
 
     
 
-def tree_growth_formula():
-    pass
+def calculate_tree_growth(x: np.ndarray, k: float, a: float, A: float, m: float) -> np.ndarray:
+    """
+    Calculates tree growth (Y) based on a modified sigmoidal growth function.
+
+    The formula is: Y = k * x * (1 - e^((a + b * x * S) * A))^m
+
+    This function is designed to model growth where juvenile trees grow faster 
+    than mature ones, characterized by an S-shaped (sigmoidal) curve.
+
+    Parameters:
+    - x (np.ndarray): Age/Time of the tree. Randomly generated when initialising the forest.
+    - k (float): Asymptotic scaling factor; controls the maximum potential size.
+    - a (float): Initial coefficient influencing the growth rate.
+    - A (float): Rate parameter; influences the speed at which the maximum size is approached.
+    - m (float): Shape parameter; determines the point of inflection (when acceleration peaks).
+
+    Returns:
+    - np.ndarray: Calculated tree growth (Y) for each age (x).
+    """
+    
+    # Ensure all inputs are float for calculation
+    k, a, A, m = float(k), float(a), float(A), float(m)
+    
+    # Calculate the exponent term
+    # Exponent = ((a + x) * A)
+    exponent_term = (a + x) * A
+    
+    # Calculate the core sigmoid term
+    # Sigmoid = (1 - e^(Exponent))^m
+    sigmoid_term = (1 - np.exp(exponent_term))**m
+    
+    # Calculate the final growth value
+    # Y = k * x * Sigmoid
+    Y = k * x * sigmoid_term
+    
+    # Add error handling so that the term is not impossible. 
+    # Add Carbon term.
+    
+    return Y
 
 def initial_cole_matrix():
     pass
