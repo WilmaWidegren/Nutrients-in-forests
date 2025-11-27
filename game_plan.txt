@@ -1,9 +1,18 @@
 Vad ska göras?:
+Skapa matriser som förklarar allt.
+    Layout matris.
+    Edges och nodes matris
+    Edges binär ihopkopplad eller inte?
+    Edges med features
+    Nodes (size på träd, amount of kol, känna av skillnaden i kol i nätverk -> skicka kol.)
 
 
 När ska vi vara klara (delmål):
+LV4: Random forst initialisation. Göra träd växa funktion.
 
 
 Vilka funktioner behövs?:
 Träd växa funktion.
 Träd dela näring funktion.
+Skapa skog funktion.
+Upptagning av kol. (stora tar upp mer pga löv.)
