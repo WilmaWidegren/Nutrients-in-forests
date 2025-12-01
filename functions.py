@@ -59,8 +59,11 @@ def calculate_tree_growth(x: np.ndarray, k: float, a: float, A: float, m: float)
     
     return Y
 
-def initial_cole_matrix():
-    pass
+def initial_cole_matrix(Number_of_trees):
+    cole_matrix = []
+    for i in range(Number_of_trees):
+        cole_matrix.append(np.random.uniform(0,'''Något valt tal'''))
+    
 
 def uppdate_cole_matrix():
     pass
