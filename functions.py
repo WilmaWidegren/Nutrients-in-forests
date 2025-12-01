@@ -15,15 +15,15 @@ def grow_initial_forest(Number_of_trees , max_size):
     tree_sizes = []
     for i in range(Number_of_trees):
         tree_sizes.append(np.random.uniform(0,max_size))
-    return tree_sizes
+    return np.array(tree_sizes)
 
     
 
-def calculate_tree_growth(x: np.ndarray, k: float, a: float, A: float, m: float) -> np.ndarray:
+def calculate_tree_growth(x :float, k: float, a: float, A: float, m: float) -> np.ndarray:
     """
     Calculates tree growth (Y) based on a modified sigmoidal growth function.
 
-    The formula is: Y = k * x * (1 - e^((a + b * x * S) * A))^m
+    The formula is: Y = k * (1 - e^((a + b * S) * A))^m
 
     This function is designed to model growth where juvenile trees grow faster 
     than mature ones, characterized by an S-shaped (sigmoidal) curve.
@@ -31,7 +31,7 @@ def calculate_tree_growth(x: np.ndarray, k: float, a: float, A: float, m: float)
     Parameters:
     - x (np.ndarray): Age/Time of the tree. Randomly generated when initialising the forest.
     - k (float): Asymptotic scaling factor; controls the maximum potential size.
-    - a (float): Initial coefficient influencing the growth rate.
+    - a (float): Initial coefficient influencing the growth rate. Coal?
     - A (float): Rate parameter; influences the speed at which the maximum size is approached.
     - m (float): Shape parameter; determines the point of inflection (when acceleration peaks).
 
@@ -52,7 +52,7 @@ def calculate_tree_growth(x: np.ndarray, k: float, a: float, A: float, m: float)
     
     # Calculate the final growth value
     # Y = k * x * Sigmoid
-    Y = k * x * sigmoid_term
+    Y = k * sigmoid_term
     
     # Add error handling so that the term is not impossible. 
     # Add Carbon term.
