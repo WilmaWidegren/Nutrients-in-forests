@@ -19,15 +19,16 @@ forest_new = np.zeros_like(forest)
 forest_new_plot = []  
 print('Initial:', forest)
 while time < 10:
-    forest[:] += 0.1
-    size = f.calculate_tree_growth(forest[:], 100, 0.01, rate_parameter, 1.2)
-    forest_new[:] = size
+    for i in range(len(forest)):
+        size = f.calculate_tree_growth(forest[:], 100, 0.01, rate_parameter, 1.2)
+        forest_new[:] = size
 
-    forest_new_plot.append(forest_new[0])   
+    forest_new_plot.append(forest_new[2])   
 
     time += 0.1
+    forest += time
 print('After growth', forest_new)
 print(forest_new_plot)
-for i in range(len(forest_new_plot)):
-    plt.plot(forest_new_plot)
+
+plt.plot(forest_new_plot)
 plt.show()
