@@ -73,3 +73,27 @@ def initial_carbon_matrix(initial_age):
 
 def uppdate_carbon_matrix():
     pass
+
+def get_conections(x, y):
+    number_of_trees = len(x)
+    conections = np.zeros((number_of_trees, number_of_trees))
+
+    s=0
+    for i in range(len(conections)):
+        
+        for j in range(0,s):
+            dx= x[i]-x[j]
+            dy=y[i]-y[j]
+            d = np.sqrt(dx**2+dy**2)
+            if d<1:
+                conections[i][j]=1
+                conections[j][i]=1
+            elif 1/d > np.random.random():
+                conections[i][j]=1
+                conections[j][i]=1
+        s+=1
+    return conections
+
+
+                
+                
