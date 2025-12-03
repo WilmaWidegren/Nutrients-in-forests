@@ -11,11 +11,11 @@ def get_tree_positions(Number_of_trees, size_of_forest):
     return x_positions, y_positions
 
 
-def grow_initial_forest(Number_of_trees , max_size):
-    tree_sizes = []
+def grow_initial_forest(Number_of_trees , max_age):
+    tree_ages = []
     for i in range(Number_of_trees):
-        tree_sizes.append(np.random.uniform(0,max_size))
-    return np.array(tree_sizes)
+        tree_ages.append(np.random.uniform(0,max_age))
+    return np.array(tree_ages)
     
 
 def calculate_tree_growth(x :float, k: float, a: float, A: float, m: float, C: float) -> np.ndarray:
