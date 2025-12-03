@@ -63,14 +63,13 @@ def calculate_max_carbon(size: np.ndarray, factor: float) -> np.ndarray:
     Size = Current size of tree.
     factor = constant.
     """
-    return np.maximum(size*factor, 0.5) # Compare two arrays and returns a new array containing the element-wise maxima.
-                                        # If the element is less than 0.5 return 0.5.
+    carbon_list = np.maximum(size*factor, 0.3) # Compare two arrays and returns a new array containing the element-wise maxima.
+                                        # If the element is less than 0.3 return 0.3
+    return carbon_list
 
-def initial_cole_matrix(Number_of_trees):
-    cole_matrix = []
-    for i in range(Number_of_trees):
-        cole_matrix.append(np.random.uniform(0,'''Något valt tal'''))
-    
+def initial_carbon_matrix(initial_size):
+    carbon_list = calculate_max_carbon(initial_size, np.random.uniform(0,0.1))
+    return carbon_list
 
 def uppdate_cole_matrix():
     pass

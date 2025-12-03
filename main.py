@@ -12,7 +12,7 @@ forest_new_plot = []
 print('Initial:', forest)
 while time < 10:
     for i in range(len(forest)):
-        size = f.calculate_tree_growth(forest[i], 0.01, 10, rate_parameter, 1.2)
+        size = f.calculate_tree_growth(forest[i], 0.01, 10, rate_parameter, 1.)
         forest_new[i] = size
 
     forest_new_plot.append(forest_new[2])   
