@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 FACTOR = np.random.uniform(0.01, 0.05)
 A = -0.015
 dt = 1
-NUM_TREES = 10
+NUM_TREES = 400
 a = 0.01
 k = 40
 m = 1.2
@@ -20,6 +20,7 @@ time = 0
 carbon = f.calculate_max_carbon(forest_age, FACTOR)
 print(forest_age)
 plot_data = [[] for _ in range(NUM_TREES)] # Create lists to plot the tree growth
+plot_average = []
 
 ### Main ###
 while time < T:
@@ -31,13 +32,19 @@ while time < T:
 
     forest_size += growth_increment # Adds the growth to the current size of the tree
 
+    average_size = forest_size.mean()
+    plot_average.append(average_size)
     time += dt  
     forest_age += dt
     carbon = f.calculate_max_carbon(forest_age, FACTOR)
 
 ### Plot ###
 for i in range(NUM_TREES):
-    plt.plot(plot_data[i], label=f'Tree {i+1}') # Visualisation of how the tree grows over time.
-plt.xlim([0,100])
+    plt.plot(plot_data[i], linewidth = 0.02, color = 'green') # Visualisation of how the tree grows over time.
+plt.plot(plot_average, label = 'Average over all trees', linestyle = 'dotted', color = 'black')
+plt.xlim([0, 100])
+plt.xlabel('Timesteps (100 years)')
+plt.ylabel('Size of trees')
+plt.title(f'Forest of {NUM_TREES} trees and its growth after 100 years with randomly\n refilled carbon reservior based on the size of trees')
 plt.legend()
 plt.show()
