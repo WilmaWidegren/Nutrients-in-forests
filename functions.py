@@ -16,10 +16,9 @@ def grow_initial_forest(Number_of_trees , max_size):
     for i in range(Number_of_trees):
         tree_sizes.append(np.random.uniform(0,max_size))
     return np.array(tree_sizes)
-
     
 
-def calculate_tree_growth(x :float, k: float, a: float, A: float, m: float) -> np.ndarray:
+def calculate_tree_growth(x :float, k: float, a: float, A: float, m: float, C: float) -> np.ndarray:
     """
     Calculates tree growth (Y) based on a modified sigmoidal growth function.
 
@@ -34,30 +33,38 @@ def calculate_tree_growth(x :float, k: float, a: float, A: float, m: float) -> n
     - a (float): Initial coefficient influencing the growth rate. Coal?
     - A (float): Rate parameter; influences the speed at which the maximum size is approached.
     - m (float): Shape parameter; determines the point of inflection (when acceleration peaks).
+    - C (float): Limiting factor; carbon reservior. Avaliable / Needed. If C = 1 -> Optimal growth.
 
     Returns:
     - np.ndarray: Calculated tree growth (Y) for each age (x).
     """
     
     # Ensure all inputs are float for calculation
-    k, a, A, m = float(k), float(a), float(A), float(m)
+    k, a, A, m, C = float(k), float(a), float(A), float(m), float(C)
     
     # Calculate the exponent term
     # Exponent = ((a + x) * A)
-    exponent_term = (a + x) * A
+    exponent_term = (a + x) * A * C
     
     # Calculate the core sigmoid term
     # Sigmoid = (1 - e^(Exponent))^m
     sigmoid_term = (1 - np.exp(exponent_term))**m
     
     # Calculate the final growth value
-    # Y = k * x * Sigmoid
     Y = k * sigmoid_term
-    
-    # Add error handling so that the term is not impossible. 
+
     # Add Carbon term.
     
     return Y
+
+def calculate_max_carbon(size: np.ndarray, factor: float) -> np.ndarray: 
+    """
+    Calculate the maximum amount of carbon avaliable based on the tree's current size. 
+    Size = Current size of tree.
+    factor = constant.
+    """
+    return np.maximum(size*factor, 0.5) # Compare two arrays and returns a new array containing the element-wise maxima.
+                                        # If the element is less than 0.5 return 0.5.
 
 def initial_cole_matrix(Number_of_trees):
     cole_matrix = []
