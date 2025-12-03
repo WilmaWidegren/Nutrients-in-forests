@@ -40,7 +40,7 @@ def calculate_tree_growth(x :float, k: float, a: float, A: float, m: float, C: f
     """
     
     # Ensure all inputs are float for calculation
-    k, a, A, m, C = float(k), float(a), float(A), float(m), float(C)
+    k, a, A, m = float(k), float(a), float(A), float(m)
     
     # Calculate the exponent term
     # Exponent = ((a + x) * A)
@@ -57,19 +57,19 @@ def calculate_tree_growth(x :float, k: float, a: float, A: float, m: float, C: f
     
     return Y
 
-def calculate_max_carbon(size: np.ndarray, factor: float) -> np.ndarray: 
+def calculate_max_carbon(age: np.ndarray, factor: float) -> np.ndarray: 
     """
     Calculate the maximum amount of carbon avaliable based on the tree's current size. 
-    Size = Current size of tree.
+    Size = Current age of tree.
     factor = constant.
     """
-    carbon_list = np.maximum(size*factor, 0.3) # Compare two arrays and returns a new array containing the element-wise maxima.
+    carbon_list = np.maximum(age*factor, 0.5) # Compare two arrays and returns a new array containing the element-wise maxima.
                                         # If the element is less than 0.3 return 0.3
     return carbon_list
 
-def initial_carbon_matrix(initial_size):
-    carbon_list = calculate_max_carbon(initial_size, np.random.uniform(0,0.1))
+def initial_carbon_matrix(initial_age):
+    carbon_list = calculate_max_carbon(initial_age, np.random.uniform(0,0.1))
     return carbon_list
 
-def uppdate_cole_matrix():
+def uppdate_carbon_matrix():
     pass

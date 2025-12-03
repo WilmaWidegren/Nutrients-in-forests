@@ -2,27 +2,42 @@ import functions as f
 import numpy as np
 import matplotlib.pyplot as plt
 
-# x, y = f.get_tree_positions(100, 10)
+### Constants ###
+FACTOR = np.random.uniform(0.01, 0.05)
+A = -0.015
+dt = 1
+NUM_TREES = 10
+a = 0.01
+k = 40
+m = 1.2
+c = 1
+T = 100
+
+### Initialisation ###
+forest_age = f.grow_initial_forest(NUM_TREES, 40)
+forest_size = f.calculate_tree_growth(forest_age, k, a, A, m, c)
 time = 0
-rate_parameter = -0.015
+carbon = f.calculate_max_carbon(forest_age, FACTOR)
+print(forest_age)
+plot_data = [[] for _ in range(NUM_TREES)] # Create lists to plot the tree growth
 
-forest = f.grow_initial_forest(10, 0)
-forest_new = np.zeros_like(forest)  
-forest_new_plot = []  
-print('Initial:', forest)
-while time < 10:
-    for i in range(len(forest)):
-        size = f.calculate_tree_growth(forest[i], 0.01, 10, rate_parameter, 1.)
-        forest_new[i] = size
+### Main ###
+while time < T:
+    for i in range(NUM_TREES):
+        plot_data[i].append(forest_size[i])
+    
+    next_size = f.calculate_tree_growth(forest_age + dt, k, a, A, m, carbon)
+    growth_increment = next_size - forest_size
 
-    forest_new_plot.append(forest_new[2])   
+    forest_size += growth_increment
 
-    time += 0.1
-    forest += time
-print('Simulation completed')
-# print('After growth', forest_new)
-# print(forest_new_plot)
+    time += dt  
+    forest_age += dt
+    carbon = f.calculate_max_carbon(forest_age, FACTOR)
 
-plt.plot(forest_new_plot)
+### Plot ###
+for i in range(NUM_TREES):
+    plt.plot(plot_data[i], label=f'Tree {i+1}')
 plt.xlim([0,100])
+plt.legend()
 plt.show()
