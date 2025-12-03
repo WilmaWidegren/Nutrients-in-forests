@@ -24,12 +24,12 @@ plot_data = [[] for _ in range(NUM_TREES)] # Create lists to plot the tree growt
 ### Main ###
 while time < T:
     for i in range(NUM_TREES):
-        plot_data[i].append(forest_size[i])
+        plot_data[i].append(forest_size[i]) # Adds the current size of the trees into a list
     
     next_size = f.calculate_tree_growth(forest_age + dt, k, a, A, m, carbon)
-    growth_increment = next_size - forest_size
+    growth_increment = next_size - forest_size # Calculates how much the tree grows for each timestep.
 
-    forest_size += growth_increment
+    forest_size += growth_increment # Adds the growth to the current size of the tree
 
     time += dt  
     forest_age += dt
@@ -37,7 +37,7 @@ while time < T:
 
 ### Plot ###
 for i in range(NUM_TREES):
-    plt.plot(plot_data[i], label=f'Tree {i+1}')
+    plt.plot(plot_data[i], label=f'Tree {i+1}') # Visualisation of how the tree grows over time.
 plt.xlim([0,100])
 plt.legend()
 plt.show()
