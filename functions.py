@@ -71,8 +71,6 @@ def initial_carbon_matrix(initial_age):
     carbon_list = calculate_max_carbon(initial_age, np.random.uniform(0,0.1))
     return carbon_list
 
-def uppdate_carbon_matrix():
-    pass
 
 def get_conections(x, y):
     number_of_trees = len(x)
@@ -93,6 +91,28 @@ def get_conections(x, y):
                 conections[j][i]=1
         s+=1
     return conections
+
+
+def uppdate_carbon_matrix(tree_size: np.ndarray, conection_matrix: np.ndarray, carbon_list) ->  np.ndarray:
+    s=0
+    for i in range(len(conection_matrix)):
+        for j in range(0,s):
+            if conection_matrix[i][j] == 1:
+                if tree_size[i] - tree_size[j]>5:
+                    carbon_to_give = carbon_list[i]/10
+                    carbon_list[i] -= carbon_to_give
+                    carbon_list[j] += carbon_to_give
+
+                elif tree_size[j] - tree_size[i]>5:
+                    carbon_to_give = carbon_list[j]/10
+                    carbon_list[j] -= carbon_to_give
+                    carbon_list[i] += carbon_to_give       
+        s+=1
+
+    return carbon_list
+
+    
+
 
 
                 
