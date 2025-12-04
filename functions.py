@@ -55,7 +55,7 @@ def calculate_tree_growth(x :float, k: float, a: float, A: float, m: float, C: f
 
     # Add Carbon term.
     
-    return Y
+    return abs(Y)
 
 def calculate_max_carbon(age: np.ndarray, factor: float) -> np.ndarray: 
     """

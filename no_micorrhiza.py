@@ -18,25 +18,26 @@ forest_age = f.grow_initial_forest(NUM_TREES, 40)
 forest_size = f.calculate_tree_growth(forest_age, k, a, A, m, c)
 time = 0
 carbon = f.calculate_max_carbon(forest_age, FACTOR)
-print(forest_age)
 plot_data = [[] for _ in range(NUM_TREES)] # Create lists to plot the tree growth
 plot_average = []
 
 ### Main ###
 while time < T:
-    for i in range(NUM_TREES):
-        plot_data[i].append(forest_size[i]) # Adds the current size of the trees into a list
-    
+
     next_size = f.calculate_tree_growth(forest_age + dt, k, a, A, m, carbon)
     growth_increment = next_size - forest_size # Calculates how much the tree grows for each timestep.
 
     forest_size += growth_increment # Adds the growth to the current size of the tree
-
+    for i in range(NUM_TREES):
+        plot_data[i].append(forest_size[i]) # Adds the current size of the trees into a list
+        if growth_increment[i] > 0:
+            carbon[i] -= 0.8
+            if carbon[i]<0: carbon[i]=0.3
     average_size = forest_size.mean()
     plot_average.append(average_size)
     time += dt  
     forest_age += dt
-    carbon = f.calculate_max_carbon(forest_age, FACTOR)
+    carbon += f.calculate_max_carbon(forest_age, FACTOR)
 
 ### Plot ###
 for i in range(NUM_TREES):
