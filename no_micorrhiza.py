@@ -29,7 +29,9 @@ while time < T:
     for i in range(NUM_TREES):
         plot_data[i].append(forest_size[i]) # Adds the current size of the trees into a list
         if growth_increment[i] < 0:
-            growth_increment[i] = 0
+            growth_increment[i] = #10
+#
+           # w#qeåpqwiejwqwdj
         elif growth_increment[i] > 0:
             carbon[i] -= 0.6
             if carbon[i]<0: carbon[i]=0.3
