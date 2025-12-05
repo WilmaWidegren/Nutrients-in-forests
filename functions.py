@@ -86,7 +86,10 @@ def get_conections(x, y):
             if d<1:
                 conections[i][j]=1
                 conections[j][i]=1
-            elif 1/d > np.random.random():
+            elif d>=50:
+                conections[i][j]=0
+                conections[j][i]=0
+            elif 2/d > np.random.random():
                 conections[i][j]=1
                 conections[j][i]=1
         s+=1
@@ -97,17 +100,18 @@ def uppdate_carbon_matrix(tree_size: np.ndarray, conection_matrix: np.ndarray, c
     s=0
     for i in range(len(conection_matrix)):
         for j in range(0,s):
-            if conection_matrix[i][j] == 1:
-                if tree_size[i] - tree_size[j]>5:
-                    carbon_to_give = carbon_list[i]/10
-                    carbon_list[i] -= carbon_to_give
-                    carbon_list[j] += carbon_to_give
+            if carbon_list[i] > 0.9:
+                if conection_matrix[i][j] == 1:
+                    if tree_size[i] - tree_size[j]>5:
+                        carbon_to_give = carbon_list[i]/20
+                        carbon_list[i] -= carbon_to_give
+                        carbon_list[j] += carbon_to_give
 
-                elif tree_size[j] - tree_size[i]>5:
-                    carbon_to_give = carbon_list[j]/10
-                    carbon_list[j] -= carbon_to_give
-                    carbon_list[i] += carbon_to_give       
-        s+=1
+                    elif tree_size[j] - tree_size[i]>5:
+                        carbon_to_give = carbon_list[j]/20
+                        carbon_list[j] -= carbon_to_give
+                        carbon_list[i] += carbon_to_give       
+            s+=1
 
     return carbon_list
 

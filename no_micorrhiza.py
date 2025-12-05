@@ -23,16 +23,17 @@ plot_average = []
 
 ### Main ###
 while time < T:
-
     next_size = f.calculate_tree_growth(forest_age + dt, k, a, A, m, carbon)
     growth_increment = next_size - forest_size # Calculates how much the tree grows for each timestep.
 
-    forest_size += growth_increment # Adds the growth to the current size of the tree
     for i in range(NUM_TREES):
         plot_data[i].append(forest_size[i]) # Adds the current size of the trees into a list
-        if growth_increment[i] > 0:
-            carbon[i] -= 0.8
+        if growth_increment[i] < 0:
+            growth_increment[i] = 0
+        elif growth_increment[i] > 0:
+            carbon[i] -= 0.6
             if carbon[i]<0: carbon[i]=0.3
+    forest_size += growth_increment # Adds the growth to the current size of the tree
     average_size = forest_size.mean()
     plot_average.append(average_size)
     time += dt  
@@ -41,7 +42,7 @@ while time < T:
 
 ### Plot ###
 for i in range(NUM_TREES):
-    plt.plot(plot_data[i], linewidth = 0.02, color = 'green') # Visualisation of how the tree grows over time.
+    plt.plot(plot_data[i], linewidth = 0.05, color = 'green') # Visualisation of how the tree grows over time.
 plt.plot(plot_average, label = 'Average over all trees', linestyle = 'dotted', color = 'black')
 plt.xlim([0, 100])
 plt.xlabel('Timesteps (100 years)')
