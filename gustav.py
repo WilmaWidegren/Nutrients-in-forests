@@ -5,9 +5,7 @@ forest_new_plot1 = []
 forest_new_plot2 = [] 
 forest_new_plot3 = [] 
 forest_new_plot4 = [] 
-# x, y = f.get_tree_positions(100, 10)
-# x = np.random.randint(1, 40)
-# x = 23
+
 # CONSTANTS
 factor = np.random.uniform(0.01, 0.05)
 rate_parameter = -0.015
