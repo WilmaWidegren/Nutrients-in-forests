@@ -35,6 +35,8 @@ print(forest_new_plot)
 plot_list= []
 for i in forest_new_plot:
     plot_list.append(i[0])
+    #lkwajoisjoisjds
+    #Lalallalla
 
 plt.plot(plot_list)
 plt.show()
