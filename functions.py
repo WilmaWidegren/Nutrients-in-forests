@@ -215,6 +215,17 @@ def mycorrhiza(NUM_TREES, LATTICE_SIZE, T, initial_forest_age):
             carbon[i] += calculate_max_carbon(forest_size[i], FACTOR)
     return plot_data, plot_average
 
+def plot_graph(NUM_TREES, T, plot_data, plot_average):
+    for i in range(NUM_TREES):
+        plt.plot(plot_data[i], linewidth = 0.05, color = 'green') # Visualisation of how the tree grows over time.
+    plt.plot(plot_average, label = 'Average over all trees', linestyle = 'dotted', color = 'black')
+    plt.xlim([0, T])
+    plt.xlabel('Timesteps (100 years)')
+    plt.ylabel('Size of trees')
+    plt.title(f'Forest of {NUM_TREES} trees and its growth after {T} years with randomly\n refilled carbon reservior dependent on the size of tree')
+    plt.legend()
+    plt.show()
+
 def plot_network(NUM_TREES, LATTICE_SIZE):
     x, y = get_tree_positions(NUM_TREES, LATTICE_SIZE)
     #carbon_list=f.initial_carbon_matrix(forest_age)
