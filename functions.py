@@ -57,15 +57,15 @@ def calculate_tree_growth(x :float, k: float, a: float, A: float, m: float, C: f
     
     return abs(Y)
 
-def calculate_max_carbon(age: np.ndarray, factor: float) -> np.ndarray: 
+def calculate_max_carbon(size: np.ndarray, factor: float) -> np.ndarray: 
     """
     Calculate the maximum amount of carbon avaliable based on the tree's current size. 
-    Size = Current age of tree.
+    Size = Current size of tree.
     factor = constant.
     TODO >>>> add something that checks if the size of the tree is over 35 then it can have over 1.0 in carbon
               this to make sure that large trees are able to help small trees easier.
     """
-    carbon_list = np.maximum(age*factor, 0.5) # Compare two arrays and returns a new array containing the element-wise maxima.
+    carbon_list = np.maximum(size*factor, 0.5) # Compare two arrays and returns a new array containing the element-wise maxima.
                                         # If the element is less than 0.3 return 0.3
     return carbon_list
 

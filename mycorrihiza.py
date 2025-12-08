@@ -3,21 +3,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ### Constants ###
-FACTOR = 0.01#np.random.uniform(0.01, 0.05)
+FACTOR = 0.01 #np.random.uniform(0.01, 0.05)
 A = -0.015
 dt = 1
-NUM_TREES = 400
+NUM_TREES = 10
 a = 0.01
 k = 40
 m = 1.2
 c = 1
-T = 100
+T = 10
 
 ### Initialisation ###
 forest_age = f.grow_initial_forest(NUM_TREES, 40)
 forest_size = f.calculate_tree_growth(forest_age, k, a, A, m, c)
 time = 0
-carbon = f.calculate_max_carbon(forest_age, FACTOR)
+carbon = f.calculate_max_carbon(forest_size, FACTOR)
 plot_data = [[] for _ in range(NUM_TREES)] # Create lists to plot the tree growth
 plot_average = []
 
@@ -40,7 +40,7 @@ while time < T:
             growth_increment[i] = 0
 
         elif growth_increment[i] > 0:
-            carbon[i] -= 0.6
+            carbon[i] -= 1.0
 
         if carbon[i] < 0: 
             carbon[i] = 0.3
@@ -50,7 +50,9 @@ while time < T:
     plot_average.append(average_size)
     time += dt  
     forest_age += dt
-    carbon += f.calculate_max_carbon(forest_age, FACTOR)
+    carbon += f.calculate_max_carbon(forest_size, FACTOR)
+    print(carbon)
+    print(forest_size)
 
 ### Plot ###
 for i in range(NUM_TREES):

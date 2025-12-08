@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ### Constants ###
-FACTOR = 0.01#np.random.uniform(0.01, 0.05)
+FACTOR = 0.01 #np.random.uniform(0.01, 0.05)
 A = -0.015
 dt = 1
 NUM_TREES = 400
@@ -39,7 +39,7 @@ while time < T:
     plot_average.append(average_size)
     time += dt  
     forest_age += dt
-    carbon += f.calculate_max_carbon(forest_age, FACTOR)
+    carbon += f.calculate_max_carbon(forest_size, FACTOR)
 
 ### Plot ###
 for i in range(NUM_TREES):
