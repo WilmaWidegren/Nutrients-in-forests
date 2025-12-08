@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ### Constants ###
-FACTOR = np.random.uniform(0.01, 0.05)
+FACTOR = 0.01#np.random.uniform(0.01, 0.05)
 A = -0.015
 dt = 1
 NUM_TREES = 400
