@@ -14,7 +14,7 @@ def get_tree_positions(Number_of_trees, size_of_forest):
 def grow_initial_forest(Number_of_trees , max_age):
     tree_ages = []
     for i in range(Number_of_trees):
-        tree_ages.append(np.random.uniform(0,max_age))
+        tree_ages.append(np.random.uniform(1, max_age))
     return np.array(tree_ages)
     
 
@@ -55,15 +55,13 @@ def calculate_tree_growth(x :float, k: float, a: float, A: float, m: float, C: f
 
     # Add Carbon term.
     
-    return abs(Y)
+    return Y
 
 def calculate_max_carbon(size: np.ndarray, factor: float) -> np.ndarray: 
     """
     Calculate the maximum amount of carbon avaliable based on the tree's current size. 
     Size = Current size of tree.
-    factor = constant.
-    TODO >>>> add something that checks if the size of the tree is over 35 then it can have over 1.0 in carbon
-              this to make sure that large trees are able to help small trees easier.
+    factor = random number between 0.03 and 0.06
     """
     carbon_list = np.maximum(size*factor, 0.5) # Compare two arrays and returns a new array containing the element-wise maxima.
                                         # If the element is less than 0.3 return 0.3
@@ -99,21 +97,25 @@ def get_conections(x, y):
 
 
 def uppdate_carbon_matrix(tree_size: np.ndarray, conection_matrix: np.ndarray, carbon_list) ->  np.ndarray:
-    s=0
-    for i in range(len(conection_matrix)):
-        for j in range(0,s):
-            if carbon_list[i] > 0.9:
-                if conection_matrix[i][j] == 1:
-                    if tree_size[i] - tree_size[j] > 5:
-                        carbon_to_give = carbon_list[i]/20
+    """
+    Distributes carbon between connected trees if a significant size difference exists, 
+    simulating a mycorrhizal network.
+    """
+    num_trees = len(conection_matrix)
+
+    for i in range(num_trees):
+        for j in range(i + 1, num_trees):
+            if carbon_list[i] > 0.9 and conection_matrix[i][j] == 1:
+                    size_difference = tree_size[i] - tree_size[j]
+                    if size_difference > 15:
+                        carbon_to_give = carbon_list[i] * 0.1
                         carbon_list[i] -= carbon_to_give
                         carbon_list[j] += carbon_to_give
 
-                    elif tree_size[j] - tree_size[i] > 5:
-                        carbon_to_give = carbon_list[j]/20
+                    elif size_difference < -15:
+                        carbon_to_give = carbon_list[j] * 0.1
                         carbon_list[j] -= carbon_to_give
-                        carbon_list[i] += carbon_to_give       
-            s+=1
+                        carbon_list[i] += carbon_to_give
 
     return carbon_list
 

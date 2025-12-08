@@ -1,43 +1,61 @@
 import functions as f
 import numpy as np
 import matplotlib.pyplot as plt
-forest_new_plot1 = [] 
-forest_new_plot2 = [] 
-forest_new_plot3 = [] 
-forest_new_plot4 = [] 
 
-# CONSTANTS
-factor = np.random.uniform(0.01, 0.05)
-rate_parameter = -0.015
+### Constants ###
+FACTOR = np.random.uniform(0.03, 0.06)
+A = -0.015
 dt = 1
-num_trees = 10
+NUM_TREES = 400
+a = 0.01
+k = 40
+m = 1.2
+c = 1
+T = 80
+COST_FOR_GROWTH = 1
 
-# INITIALISATION
-forest_age = f.grow_initial_forest(num_trees, 40)
-forest_size = f.calculate_tree_growth(forest_age, 40, 0.01, rate_parameter, 1.2, 1)
+### Initialisation ###
+forest_age = f.grow_initial_forest(NUM_TREES, 40)
+forest_size = f.calculate_tree_growth(forest_age, k, a, A, m, c)
 time = 0
-carbon = f.calculate_max_carbon(forest_age, factor)
-print(forest_age)
-plot_data = [[] for _ in range(num_trees)]
+carbon = f.calculate_max_carbon(forest_size, FACTOR)
+plot_data = [[] for _ in range(NUM_TREES)] # Create lists to plot the tree growth
+plot_average = []
 
-# MAIN LOOP
-while time < 100:
-    for i in range(num_trees):
-        plot_data[i].append(forest_size[i])
+### Main ###
+while time < T:
+    next_size = f.calculate_tree_growth(forest_age + dt, k, a, A, m, carbon)
+    growth_increment = next_size - forest_size # Calculates how much the tree grows for each timestep.
     
-    next_size = f.calculate_tree_growth(forest_age + dt, 40, 0.01, rate_parameter, 1.2, carbon)
-    growth_increment = next_size - forest_size
+    for i in range(NUM_TREES):
+        if growth_increment[i] > 1:
+            growth_increment[i] = 1
 
-    forest_size += growth_increment
+        plot_data[i].append(forest_size[i]) # Adds the current size of the trees into a list
 
+        if growth_increment[i] < 0:
+            growth_increment[i] = 0
+
+        elif growth_increment[i] > 0:
+            carbon[i] -= growth_increment[i] * COST_FOR_GROWTH
+
+        if carbon[i] < 0: 
+            carbon[i] = 0
+
+    forest_size += growth_increment # Adds the growth to the current size of the tree
+    average_size = forest_size.mean()
+    plot_average.append(average_size)
     time += dt  
     forest_age += dt
-    carbon = f.calculate_max_carbon(forest_age, factor)
+    for i in range(NUM_TREES):
+        carbon[i] += f.calculate_max_carbon(forest_size[i], FACTOR)
 
-print('After growth', forest_age)
-# print(forest_new_plot)
-for i in range(num_trees):
-    plt.plot(plot_data[i], label=f'Tree {i+1}')
-plt.xlim([0,100])
+for i in range(NUM_TREES):
+    plt.plot(plot_data[i], linewidth = 0.05, color = 'green') # Visualisation of how the tree grows over time.
+plt.plot(plot_average, label = 'Average over all trees', linestyle = 'dotted', color = 'black')
+plt.xlim([0, T])
+plt.xlabel('Timesteps (100 years)')
+plt.ylabel('Size of trees')
+plt.title(f'Forest of {NUM_TREES} trees and its growth after 100 years with randomly\n refilled carbon reservior based on the size of trees')
 plt.legend()
 plt.show()
