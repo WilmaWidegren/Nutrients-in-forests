@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 # This function taker number ocf trees (int), size of forest (int), the size will be that squared in the first cuadrant
 def get_tree_positions(Number_of_trees, size_of_forest):
@@ -67,11 +68,6 @@ def calculate_max_carbon(size: np.ndarray, factor: float) -> np.ndarray:
                                         # If the element is less than 0.3 return 0.3
     return carbon_list
 
-def initial_carbon_matrix(initial_age):
-    carbon_list = calculate_max_carbon(initial_age, np.random.uniform(0,0.1))
-    return carbon_list
-
-
 def get_conections(x, y):
     number_of_trees = len(x)
     conections = np.zeros((number_of_trees, number_of_trees))
@@ -119,9 +115,127 @@ def uppdate_carbon_matrix(tree_size: np.ndarray, conection_matrix: np.ndarray, c
 
     return carbon_list
 
-    
+def no_mycorrhiza(NUM_TREES, T, initial_forest_age):
+    ### Constants ###
+    FACTOR = np.random.uniform(0.03, 0.06)
+    A = -0.015
+    dt = 1
+    a = 0.01
+    k = 40
+    m = 1.2
+    c = 1
+    COST_FOR_GROWTH = 1.3
 
+    ### Initialisation ###
+    forest_size = calculate_tree_growth(initial_forest_age, k, a, A, m, c)
+    time = 0
+    carbon = calculate_max_carbon(forest_size, FACTOR)
+    plot_data = [[] for _ in range(NUM_TREES)] # Create lists to plot the tree growth
+    plot_average = []
+    forest_age = initial_forest_age
+    ### Main ###
+    while time < T:
+        next_size = calculate_tree_growth(forest_age + dt, k, a, A, m, carbon)
+        growth_increment = next_size - forest_size # Calculates how much the tree grows for each timestep.
 
-
+        for i in range(NUM_TREES):
+            if growth_increment[i] > 1:
+                growth_increment[i] = 1
+            plot_data[i].append(forest_size[i]) # Adds the current size of the trees into a list
+            if growth_increment[i] < 0:
+                growth_increment[i] = 0
                 
-                
+            elif growth_increment[i] > 0:
+                carbon[i] -= growth_increment[i] * COST_FOR_GROWTH
+                if carbon[i] < 0:
+                    carbon[i] = 0
+
+        forest_size += growth_increment # Adds the growth to the current size of the tree
+        average_size = forest_size.mean()
+        plot_average.append(average_size)
+        time += dt  
+        forest_age += dt
+        for i in range(NUM_TREES):
+            carbon[i] += calculate_max_carbon(forest_size[i], FACTOR)
+
+    return plot_data, plot_average
+
+def mycorrhiza(NUM_TREES, LATTICE_SIZE, T, initial_forest_age):
+    ### Constants ###
+    FACTOR = np.random.uniform(0.03, 0.06)
+    COST_FOR_GROWTH = 1
+    A = -0.015
+    dt = 1
+    a = 0.01
+    k = 40
+    m = 1.2
+    c = 1
+
+    ### Initialisation ###
+    forest_size = calculate_tree_growth(initial_forest_age, k, a, A, m, c)
+    time = 0
+    carbon = calculate_max_carbon(forest_size, FACTOR)
+    plot_data = [[] for _ in range(NUM_TREES)] # Create lists to plot the tree growth
+    plot_average = []
+
+    x, y = get_tree_positions(NUM_TREES, LATTICE_SIZE)
+    conection_matrix = get_conections(x, y)
+    forest_age = initial_forest_age
+
+    ### Main ###
+    while time < T:
+        for _ in range(4):
+            new_carbon = uppdate_carbon_matrix(forest_size, conection_matrix, carbon)
+            carbon=new_carbon
+
+        next_size = calculate_tree_growth(forest_age + dt, k, a, A, m, carbon)
+        growth_increment = next_size - forest_size # Calculates how much the tree grows for each timestep.
+        
+        for i in range(NUM_TREES):
+
+            if growth_increment[i] > 1:
+                growth_increment[i] = 1
+
+            plot_data[i].append(forest_size[i]) # Adds the current size of the trees into a list
+            if growth_increment[i] < 0:
+                growth_increment[i] = 0
+
+            elif growth_increment[i] > 0:
+                carbon[i] -= growth_increment[i] * COST_FOR_GROWTH
+
+            if carbon[i] < 0: 
+                carbon[i] = 0
+
+        forest_size += growth_increment # Adds the growth to the current size of the tree
+        average_size = forest_size.mean()
+        plot_average.append(average_size)
+        time += dt  
+        forest_age += dt
+        for i in range(NUM_TREES):
+            carbon[i] += calculate_max_carbon(forest_size[i], FACTOR)
+    return plot_data, plot_average
+
+def plot_network(NUM_TREES, LATTICE_SIZE):
+    x, y = get_tree_positions(NUM_TREES, LATTICE_SIZE)
+    #carbon_list=f.initial_carbon_matrix(forest_age)
+    conection_matrix = get_conections(x, y)
+    # Definiera vilka träd du vill visa kopplingar från
+    target_trees = [np.random.randint(0, NUM_TREES)]
+
+    plt.scatter(x, y, c='g', zorder=2)
+
+    # Iterera ENDAST över de utvalda träden
+    for i in target_trees:
+        # Fortsätt iterera över ALLA andra träd (j)
+        for j in range(NUM_TREES):
+            # Förhindra att rita en linje från trädet till sig självt
+            if i == j:
+                continue            
+            # Kontrollera kopplingen i matrisen (behöver bara kolla en riktning 
+            # eftersom matrisen är symmetrisk för detta nätverk)
+            if conection_matrix[i, j] == 1:
+                # Rita linjen
+                plt.plot([x[i], x[j]], [y[i], y[j]], 'r-', alpha=0.7, linewidth=0.2, zorder=1)
+
+    plt.title(f"Entire mycorrhiza network")
+    plt.show()
