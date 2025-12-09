@@ -23,7 +23,7 @@ def calculate_tree_growth(x :float, k: float, A: float, m: float, C: float) -> n
     """
     Calculates tree growth (Y) based on a modified sigmoidal growth function.
 
-    The formula is: Y = k * (1 - e^(x * A * C))^m
+    The formula is: Y = k * (1 - e^(x * A * C))^1/(1-m)
 
     This function is designed to model growth where juvenile trees grow faster 
     than mature ones, characterized by an S-shaped (sigmoidal) curve.
@@ -48,7 +48,7 @@ def calculate_tree_growth(x :float, k: float, A: float, m: float, C: float) -> n
     
     # Calculate the core sigmoid term
     # Sigmoid = (1 - e^(Exponent))^m
-    sigmoid_term = (1 - np.exp(exponent_term))**m
+    sigmoid_term = (1 - np.exp(-exponent_term))**(1/(1-m))
     
     # Calculate the final growth value
     Y = k * sigmoid_term
@@ -117,17 +117,16 @@ def uppdate_carbon_matrix(tree_size: np.ndarray, conection_matrix: np.ndarray, c
 def no_mycorrhiza(NUM_TREES, T, initial_forest_size):
     ### Constants ###
     FACTOR = np.random.uniform(0.03, 0.06)
-    A = -0.015
+    COST_FOR_GROWTH = 1.3
+    A = 0.010
     dt = 1
     k = 40
-    m = 1.2
-    c = 1
-    COST_FOR_GROWTH = 1.3
+    m = 0
 
     ### Initialisation ###
-    forest_size = initial_forest_size.copy() # calculate_tree_growth(initial_forest_size, k, A, m, c)
+    forest_size = initial_forest_size.copy() 
     time = 0
-    carbon = carbon = np.ones_like(forest_size) # calculate_max_carbon(forest_size, FACTOR)
+    carbon = np.ones_like(forest_size) # Start with optimal carbon for everyone
     plot_data = [[] for _ in range(NUM_TREES)] # Create lists to plot the tree growth
     plot_average = []
     forest_age = initial_forest_size
@@ -153,6 +152,7 @@ def no_mycorrhiza(NUM_TREES, T, initial_forest_size):
         plot_average.append(average_size)
         time += dt  
         forest_age += dt
+
         for i in range(NUM_TREES):
             carbon[i] += calculate_max_carbon(forest_size[i], FACTOR)
 
@@ -162,16 +162,15 @@ def mycorrhiza(NUM_TREES, LATTICE_SIZE, T, initial_forest_size):
     ### Constants ###
     FACTOR = np.random.uniform(0.03, 0.06)
     COST_FOR_GROWTH = 1.3
-    A = -0.015
+    A = 0.010
     dt = 1
     k = 40
-    m = 1.2
-    c = 1
+    m = 0
 
     ### Initialisation ###
-    forest_size = initial_forest_size.copy() # calculate_tree_growth(initial_forest_size, k, A, m, c)
+    forest_size = initial_forest_size.copy()
     time = 0
-    carbon = np.ones_like(forest_size) # calculate_max_carbon(forest_size, FACTOR)
+    carbon = np.ones_like(forest_size)
     plot_data = [[] for _ in range(NUM_TREES)] # Create lists to plot the tree growth
     plot_average = []
 
@@ -208,42 +207,34 @@ def mycorrhiza(NUM_TREES, LATTICE_SIZE, T, initial_forest_size):
         plot_average.append(average_size)
         time += dt  
         forest_age += dt
+
         for i in range(NUM_TREES):
             carbon[i] += calculate_max_carbon(forest_size[i], FACTOR)
+
     return plot_data, plot_average
 
 def plot_graph(NUM_TREES, T, plot_data, plot_average):
     for i in range(NUM_TREES):
         plt.plot(plot_data[i], linewidth = 0.05, color = 'green') # Visualisation of how the tree grows over time.
+
     plt.plot(plot_average, label = 'Average over all trees', linestyle = 'dotted', color = 'black')
     plt.xlim([0, T])
     plt.xlabel('Timesteps (100 years)')
     plt.ylabel('Size of trees')
     plt.title(f'Forest of {NUM_TREES} trees and its growth after {T} years with randomly\n refilled carbon reservior dependent on the size of tree')
     plt.legend()
-    plt.show()
 
 def plot_network(NUM_TREES, LATTICE_SIZE):
     x, y = get_tree_positions(NUM_TREES, LATTICE_SIZE)
-    #carbon_list=f.initial_carbon_matrix(forest_age)
     conection_matrix = get_conections(x, y)
-    # Definiera vilka träd du vill visa kopplingar från
-    target_trees = [np.random.randint(0, NUM_TREES)]
+    target_trees = [np.random.randint(0, NUM_TREES)] # List of trees who's connections will be visualised
 
-    plt.scatter(x, y, c='g', zorder=2)
+    plt.scatter(x, y, c='g', zorder=2) # Place all trees on the grid
 
-    # Iterera ENDAST över de utvalda träden
     for i in target_trees:
-        # Fortsätt iterera över ALLA andra träd (j)
         for j in range(NUM_TREES):
-            # Förhindra att rita en linje från trädet till sig självt
-            if i == j:
+            if i == j: # No connections with itself
                 continue            
-            # Kontrollera kopplingen i matrisen (behöver bara kolla en riktning 
-            # eftersom matrisen är symmetrisk för detta nätverk)
             if conection_matrix[i, j] == 1:
-                # Rita linjen
                 plt.plot([x[i], x[j]], [y[i], y[j]], 'r-', alpha=0.7, linewidth=0.2, zorder=1)
-
     plt.title(f"Entire mycorrhiza network")
-    plt.show()
