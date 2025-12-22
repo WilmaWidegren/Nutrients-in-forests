@@ -115,13 +115,13 @@ def uppdate_carbon_matrix(tree_size: np.ndarray, conection_matrix: np.ndarray, c
     return carbon_list
 
 def no_mycorrhiza(NUM_TREES, T, initial_forest_size):
-    ### Constants ###
-    FACTOR = np.random.uniform(0.03, 0.06)
+    ### Constants parameter set 2###
+    FACTOR = np.random.uniform(0.04, 0.07)
     COST_FOR_GROWTH = 1.3
-    A = 0.010
+    A = 0.015
     dt = 1
     k = 40
-    m = 0
+    m = 0.5
 
     ### Initialisation ###
     forest_size = initial_forest_size.copy() 
@@ -159,13 +159,13 @@ def no_mycorrhiza(NUM_TREES, T, initial_forest_size):
     return plot_data, plot_average
 
 def mycorrhiza(NUM_TREES, LATTICE_SIZE, T, initial_forest_size):
-    ### Constants ###
-    FACTOR = np.random.uniform(0.03, 0.06)
+    ### Constants parameter set 2 ###
+    FACTOR = np.random.uniform(0.04, 0.07)
     COST_FOR_GROWTH = 1.3
-    A = 0.010
+    A = 0.015
     dt = 1
     k = 40
-    m = 0
+    m = 0.5
 
     ### Initialisation ###
     forest_size = initial_forest_size.copy()
@@ -219,7 +219,7 @@ def plot_graph(NUM_TREES, T, plot_data, plot_average):
 
     plt.plot(plot_average, label = 'Average over all trees', linestyle = 'dotted', color = 'black')
     plt.xlim([0, T])
-    plt.xlabel('Timesteps (100 years)')
+    plt.xlabel(f'Timesteps ({T} years)')
     plt.ylabel('Size of trees')
     plt.title(f'Forest of {NUM_TREES} trees and its growth after {T} years with randomly\n refilled carbon reservior dependent on the size of tree')
     plt.legend()
@@ -227,14 +227,14 @@ def plot_graph(NUM_TREES, T, plot_data, plot_average):
 def plot_network(NUM_TREES, LATTICE_SIZE):
     x, y = get_tree_positions(NUM_TREES, LATTICE_SIZE)
     conection_matrix = get_conections(x, y)
-    target_trees = [np.random.randint(0, NUM_TREES)] # List of trees who's connections will be visualised
+    target_trees = np.arange(NUM_TREES) #[np.random.randint(0, NUM_TREES)] # List of trees who's connections will be visualised
 
-    plt.scatter(x, y, c='g', zorder=2) # Place all trees on the grid
+    plt.scatter(x, y, c='g', zorder=2, marker = '^') # Place all trees on the grid
 
     for i in target_trees:
         for j in range(NUM_TREES):
             if i == j: # No connections with itself
                 continue            
             if conection_matrix[i, j] == 1:
-                plt.plot([x[i], x[j]], [y[i], y[j]], 'r-', alpha=0.7, linewidth=0.2, zorder=1)
+                plt.plot([x[i], x[j]], [y[i], y[j]], 'k-', alpha=0.02, linewidth=0.2, zorder=1)
     plt.title(f"Entire mycorrhiza network")
